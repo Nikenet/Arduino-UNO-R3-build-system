@@ -42,5 +42,5 @@ clean:
 	rm -rf ./build_dir/*
 
 distclean:
-	rm -f ./builder/arduino-builder
+	rm -f  ./builder/arduino-builder
 	rm -rf ./build_dir/*
