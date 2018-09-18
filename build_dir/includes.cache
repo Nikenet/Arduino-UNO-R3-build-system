@@ -1,0 +1,17 @@
+[
+  {
+    "Sourcefile": "",
+    "Include": "",
+    "Includepath": "/home/nikenet/osu_keyboard/builder/hardware/arduino/avr/cores/arduino"
+  },
+  {
+    "Sourcefile": "",
+    "Include": "",
+    "Includepath": "/home/nikenet/osu_keyboard/builder/hardware/arduino/avr/variants/standard"
+  },
+  {
+    "Sourcefile": "/home/nikenet/osu_keyboard/build_dir/sketch/main.ino.cpp",
+    "Include": "",
+    "Includepath": ""
+  }
+]
