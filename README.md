@@ -7,3 +7,6 @@ Dependensies:
 	avrdude
 	go
 	binutils
+
+	for esp8266:
+	pyserial3.0 (look it in pip repo)
