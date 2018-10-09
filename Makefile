@@ -1,42 +1,47 @@
-SERIAL_TARGET=/dev/ttyACM0
+SERIAL_TARGET=/dev/ttyUSB0
+FQBN=esp8266:esp8266:nodemcu:CpuFrequency=80,VTable=flash,FlashSize=4M1M,LwIPVariant=v2mss536,Debug=Disabled,DebugLevel=None____,FlashErase=none,UploadSpeed=115200
 
 builder/arduino-builder:
 	./builder/build.sh
 	mv arduino-builder ./builder/arduino-builder
 
 build: builder/arduino-builder
-	./builder/arduino-builder                    \
-		-compile                                 \
-		-verbose                                 \
-		-hardware   `pwd`/builder/hardware       \
-		-tools      `pwd`/builder/tools          \
-		-tools      `pwd`/builder/tools-builder  \
-		-libraries  `pwd`/builder/lib            \
-		-build-path `pwd`/build_dir              \
-		-fqbn        arduino:avr:uno             \
-		src/main.ino
+
+	./builder/arduino-builder                     \
+	-dump-prefs                                   \
+	-logger=machine                               \
+	-hardware `pwd`/builder/hardware              \
+	-hardware `pwd`/builder/packages/packages     \
+	-tools `pwd`/builder/tools-builder            \
+	-tools `pwd`/builder/hardware/tools/avr       \
+	-tools `pwd`/builder/packages/packages        \
+	-libraries `pwd`/builder/libraries            \
+	-fqbn=$(FQBN)                                 \
+	-build-path `pwd`/build_dir                   \
+	-warnings=all                                 \
+	-verbose                                      \
+	`pwd`/src/main.ino
+
+	./builder/arduino-builder                     \
+	-compile                                      \
+	-logger=machine                               \
+	-hardware `pwd`/builder/hardware              \
+	-hardware `pwd`/builder/packages/packages     \
+	-tools `pwd`/builder/tools-builder            \
+	-tools `pwd`/builder/hardware/tools/avr       \
+	-tools `pwd`/builder/packages/packages        \
+	-libraries `pwd`/builder/libraries            \
+	-fqbn=$(FQBN)                                 \
+	-build-path `pwd`/build_dir                   \
+	-warnings=all                                 \
+	-verbose                                      \
+	`pwd`/src/main.ino
 
 upload:
-	sudo uname -a
-	sudo avrdude                             \
-		-v                                   \
-		-D                                   \
-		-p atmega328p                        \
-		-c arduino                           \
-		-P $(SERIAL_TARGET)                  \
-		-b 115200                            \
-		-U ./build_dir/main.ino.hex
-
-flash/serial:
-	sudo uname -a
-	sudo ./atmega16u2_programmer/program.sh            \
-		./atmega16u2_programmer/Arduino-usbserial.hex
-
-flash/keyboard:
-	sudo uname -a
-	sudo ./atmega16u2_programmer/program.sh            \
-		./atmega16u2_programmer/Arduino-keyboard.hex
-
+	sudo /home/nikenet/osu_keyboard/esptool/esptool.py \
+	--port $(SERIAL_TARGET)                            \
+	write_flash 0x1000                                 \
+	`pwd`/build_dir/main.ino.bin                       \
 
 clean:
 	rm -rf ./build_dir/*
