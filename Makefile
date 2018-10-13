@@ -1,5 +1,5 @@
 SERIAL_TARGET=/dev/ttyUSB0
-FQBN=esp8266:esp8266:nodemcu:CpuFrequency=80,VTable=flash,FlashSize=4M1M,LwIPVariant=v2mss536,Debug=Disabled,DebugLevel=None____,FlashErase=none,UploadSpeed=115200
+FQBN=esp8266:esp8266:nodemcu:CpuFrequency=160,VTable=flash,FlashSize=4M1M,LwIPVariant=v2mss536,Debug=Disabled,DebugLevel=None____,FlashErase=none,UploadSpeed=115200
 
 builder/arduino-builder:
 	./builder/build.sh
@@ -19,7 +19,6 @@ build: builder/arduino-builder
 	-fqbn=$(FQBN)                                 \
 	-build-path `pwd`/build_dir                   \
 	-warnings=all                                 \
-	-verbose                                      \
 	`pwd`/src/main.ino
 
 	./builder/arduino-builder                     \
@@ -34,13 +33,12 @@ build: builder/arduino-builder
 	-fqbn=$(FQBN)                                 \
 	-build-path `pwd`/build_dir                   \
 	-warnings=all                                 \
-	-verbose                                      \
 	`pwd`/src/main.ino
 
 upload:
 	sudo /home/nikenet/osu_keyboard/esptool/esptool.py \
 	--port $(SERIAL_TARGET)                            \
-	write_flash 0x1000                                 \
+	write_flash 0x00000000                             \
 	`pwd`/build_dir/main.ino.bin                       \
 
 clean:
